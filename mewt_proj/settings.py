@@ -4,30 +4,47 @@ import django_heroku
 
 # python packages
 from pathlib import Path
+from datetime import timedelta
+
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = config('SECRET_KEY')
-
+# environment variables
+SECRET_KEY = config('SECRET_KEY', '')
 DEBUG = config('DEBUG', cast=bool)
-
 ALLOWED_HOSTS = [config('ALLOWED_HOST')]
 
 
 INSTALLED_APPS = [
-	'whitenoise.runserver_nostatic',
-    'django.contrib.admin',
+
+	# the following whitenoise app may be uncommented if you want to utilize whitenoise for development as well
+	# in that case you need to separately run 'python manage.py collecstatic' before runserver
+	# for further info refer 'http://whitenoise.evans.io/en/stable/django.html#using-whitenoise-in-development'
+
+	# 'whitenoise.runserver_nostatic',
+
+	'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
 	'rest_framework',
+	'rest_framework_simplejwt',
+
+	# # following app can be included if the project requires background tasks
+	# # this app is to be installed before any of the custom apps:
+	'django_dramatiq',
+
+	# follwing sample app may be removed in the real project if so required
+	'sample_app',
+
+	# other apps can be added after this
 ]
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
-	'whitenoise.middleware.WhiteNoiseMiddleware',
+	'whitenoise.middleware.WhiteNoiseMiddleware', # <-- new addition
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -102,3 +119,34 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Activate Django-Heroku.
 django_heroku.settings(locals())
+
+
+# # SETUP JWT AUTHENTICATION
+# REST_FRAMEWORK = {
+#     'DEFAULT_PERMISSION_CLASSES': ('rest_framework.permissions.IsAuthenticated',),
+#     'DEFAULT_AUTHENTICATION_CLASSES': ('rest_framework_simplejwt.authentication.JWTAuthentication',),
+# }
+
+# SIMPLE_JWT = {
+#     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=5),
+#     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+# }
+
+
+
+# # SETUP RABBITMQ TASK QUEUE
+# DRAMATIQ_BROKER = {
+#     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
+#     "OPTIONS": {
+#         "url": config('CLOUDAMQP_URL'),
+#     },
+#     "MIDDLEWARE": [
+#         "dramatiq.middleware.Prometheus",
+#         "dramatiq.middleware.AgeLimit",
+#         "dramatiq.middleware.TimeLimit",
+#         "dramatiq.middleware.Callbacks",
+#         "dramatiq.middleware.Retries",
+#         "django_dramatiq.middleware.DbConnectionsMiddleware",
+#         "django_dramatiq.middleware.AdminMiddleware",
+#     ]
+# }

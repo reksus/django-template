@@ -4,3 +4,6 @@ python-decouple
 whitenoise
 django-heroku
 gunicorn
+djangorestframework-simplejwt
+pika
+django-dramatiq
