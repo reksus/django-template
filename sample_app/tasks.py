@@ -16,7 +16,7 @@ def sample_heavy_task():
 	logger.error("Information describing a major problem that has occurred.")
 	logger.critical("Information describing a critical problem that has occurred.")
 
-	# logs for this sample_heavy_task
-	logger.info("sample heavy completing in 5 seconds")
-	time.sleep(5)
+	# # logs for this sample_heavy_task
+	# logger.info("sample heavy completing in 5 seconds")
+	# time.sleep(5)
 	logger.info("sample heavy task completed.")
