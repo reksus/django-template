@@ -1,17 +1,17 @@
 # external packages
 from decouple import config
-import django_heroku
 
 # python packages
 from pathlib import Path
 from datetime import timedelta
 
 
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-# environment variables
 SECRET_KEY = config('SECRET_KEY', '')
-DEBUG = config('DEBUG', cast=bool)
+
+DEBUG = config('DEBUG', default='False') == 'True'
+
 ALLOWED_HOSTS = [config('ALLOWED_HOST')]
 
 
@@ -84,20 +84,7 @@ DATABASES = {
     }
 }
 
-AUTH_PASSWORD_VALIDATORS = [
-    {
-        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
-    },
-    {
-        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
-    },
-]
+
 
 LANGUAGE_CODE = 'en-us'
 
@@ -117,8 +104,6 @@ STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Activate Django-Heroku.
-django_heroku.settings(locals())
 
 
 # # SETUP JWT AUTHENTICATION
@@ -138,7 +123,7 @@ django_heroku.settings(locals())
 # DRAMATIQ_BROKER = {
 #     "BROKER": "dramatiq.brokers.rabbitmq.RabbitmqBroker",
 #     "OPTIONS": {
-#         "url": config('CLOUDAMQP_URL'),
+#         "url": config('RABBITMQ_BROKER_URL'),
 #     },
 #     "MIDDLEWARE": [
 #         "dramatiq.middleware.Prometheus",
