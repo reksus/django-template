@@ -2,7 +2,6 @@ django
 djangorestframework
 python-decouple
 whitenoise
-django-heroku
 gunicorn
 djangorestframework-simplejwt
 pika
